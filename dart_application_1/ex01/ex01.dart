@@ -20,7 +20,7 @@ main() async {
   fileName=outputFile.path.substring(temp + 1, outputFile.path.length - 4);
   outputFile.writeAsStringSync("");
 
-  // Get the system temp directory.
+  // Get the system temp directory .
   var systemTempDir = Directory.systemTemp;
 
   final dir = Directory(path);
