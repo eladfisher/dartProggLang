@@ -112,7 +112,7 @@ main() async {
 }
 
 String pop(String type, String val){
-  String res ="";
+  String res = "";
 
   if(type == "static"){
     res = """
