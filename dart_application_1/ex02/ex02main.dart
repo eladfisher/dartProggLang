@@ -137,75 +137,75 @@ main() async {
 }
 
 String returnCommand() {
-  String res = "//return\n";
-  res+= returnFrame();
-  res+= returnAdressSave();
-  res+= returnValSave();
-  res+= returnSpUpdate();
-  res+= returnSegment("THAT");
-  res+= returnSegment("THIS");
-  res+= returnSegment("ARG");
-  res+= returnSegment("LCL");
-  res+= returnGoto();
+  // String res = "//return\n";
+  // res+= returnFrame();
+  // res+= returnAdressSave();
+  // res+= returnValSave();
+  // res+= returnSpUpdate();
+  // res+= returnSegment("THAT");
+  // res+= returnSegment("THIS");
+  // res+= returnSegment("ARG");
+  // res+= returnSegment("LCL");
+  // res+= returnGoto();
 
-  // String res = """
-  // //func return
-  // // FRAME = LCL
-  // @LCL
-  // D=M
-  // // RET = * (FRAME-5)
-  // // RAM[13] = (LOCAL - 5)
-  // @5
-  // A=D-A
-  // D=M
-  // @13
-  // M=D
-  // // * ARG = pop()
-  // @SP
-  // M=M-1
-  // A=M
-  // D=M
-  // @ARG
-  // A=M
-  // M=D
-  // // SP = ARG+1
-  // @ARG
-  // D=M
-  // @SP
-  // M=D+1
-  // // THAT = *(FRAM-1)
-  // @LCL
-  // M=M-1
-  // A=M
-  // D=M
-  // @THAT
-  // M=D
-  // // THIS = *(FRAM-2)
-  // @LCL
-  // M=M-1
-  // A=M
-  // D=M
-  // @THIS
-  // M=D
-  // // ARG = *(FRAM-3)
-  // @LCL
-  // M=M-1
-  // A=M
-  // D=M
-  // @ARG
-  // M=D
-  // // LCL = *(FRAM-4)
-  // @LCL
-  // M=M-1
-  // A=M
-  // D=M
-  // @LCL
-  // M=D
-  // // goto RET
-  // @13
-  // A=M
-  // 0; JMP
-  // """;
+  String res = """
+  //func return
+  // FRAME = LCL
+  @LCL
+  D=M
+  // RET = * (FRAME-5) 
+  // RAM[13] = (LOCAL - 5)
+  @5
+  A=D-A
+  D=M
+  @13
+  M=D
+  // * ARG = pop()
+  @SP
+  M=M-1
+  A=M
+  D=M
+  @ARG
+  A=M
+  M=D
+  // SP = ARG+1
+  @ARG
+  D=M
+  @SP
+  M=D+1
+  // THAT = *(FRAM-1)
+  @LCL
+  M=M-1
+  A=M
+  D=M
+  @THAT
+  M=D
+  // THIS = *(FRAM-2)
+  @LCL
+  M=M-1
+  A=M
+  D=M
+  @THIS
+  M=D
+  // ARG = *(FRAM-3)
+  @LCL
+  M=M-1
+  A=M
+  D=M
+  @ARG
+  M=D
+  // LCL = *(FRAM-4)
+  @LCL
+  M=M-1
+  A=M
+  D=M
+  @LCL
+  M=D
+  // goto RET
+  @13
+  A=M
+  0; JMP
+  """;
   return res;
 }
 
@@ -290,79 +290,79 @@ String function(String funcName, String numArgs) {
 }
 
 String func(String funcName, String numArgs) {
-  String res = "//func call in vm\n";
-  res += funcPush("$funcName.ReturnAddress_$runingNumber");
-  res += funcPush("LCL");
-  res += funcPush("ARG");
-  res += funcPush("THIS");
-  res += funcPush("THAT");
-  res += updateARG(int.parse(numArgs));
-  res += updateLCL();
-  res += funcCall(funcName);
+  // String res = "//func call in vm\n";
+  // res += funcPush("$funcName.ReturnAddress_$runingNumber");
+  // res += funcPush("LCL");
+  // res += funcPush("ARG");
+  // res += funcPush("THIS");
+  // res += funcPush("THAT");
+  // res += updateARG(int.parse(numArgs));
+  // res += updateLCL();
+  // res += funcCall(funcName);
 
-  // int newArgNumber = 5 + int.parse(numArgs);
-  //
-  // String res = """
-  // //call $funcName
-  // // push return-address
-  // @$funcName.ReturnAddress$runingNumber
-  // D=A
-  // @SP
-  // A=M
-  // M=D
-  // @SP
-  // M=M+1
-  // // push LCL
-  // @LCL
-  // D=M
-  // @SP
-  // A=M
-  // M=D
-  // @SP
-  // M=M+1
-  // // push ARG
-  // @ARG
-  // D=M
-  // @SP
-  // A=M
-  // M=D
-  // @SP
-  // M=M+1
-  // // push THIS
-  // @THIS
-  // D=M
-  // @SP
-  // A=M
-  // M=D
-  // @SP
-  // M=M+1
-  // // push THAT
-  // @THAT
-  // D=M
-  // @SP
-  // A=M
-  // M=D
-  // @SP
-  // M=M+1
-  // // ARG = SP-n-5
-  // @SP
-  // D=M
-  // @$newArgNumber // = n-5
-  // D=D-A
-  // @ARG
-  // M=D
-  // // LCL = SP
-  // @SP
-  // D=M
-  // @LCL
-  // M=D
-  // // goto $funcName
-  // @$funcName
-  // 0; JMP
-  // // label return-address
-  // ($funcName.ReturnAddress$runingNumber)
-  //
-  // """;
+  int newArgNumber = 5 + int.parse(numArgs);
+
+  String res = """
+  //call $funcName
+  // push return-address
+  @$funcName.ReturnAddress$runingNumber
+  D=A
+  @SP
+  A=M
+  M=D
+  @SP
+  M=M+1
+  // push LCL
+  @LCL
+  D=M
+  @SP
+  A=M
+  M=D
+  @SP
+  M=M+1
+  // push ARG
+  @ARG
+  D=M
+  @SP
+  A=M
+  M=D
+  @SP
+  M=M+1
+  // push THIS
+  @THIS
+  D=M
+  @SP
+  A=M
+  M=D
+  @SP
+  M=M+1
+  // push THAT
+  @THAT
+  D=M
+  @SP
+  A=M
+  M=D
+  @SP
+  M=M+1
+  // ARG = SP-n-5
+  @SP
+  D=M
+  @$newArgNumber // = n-5
+  D=D-A
+  @ARG
+  M=D
+  // LCL = SP
+  @SP
+  D=M
+  @LCL
+  M=D
+  // goto $funcName
+  @$funcName
+  0; JMP
+  // label return-address
+  ($funcName.ReturnAddress$runingNumber)
+
+  """;
   return res;
 }
 
@@ -386,11 +386,11 @@ String updateLCL() {
 }
 
 String updateARG(int numArgs) {
-  int temp = 5 + numArgs;//the new ARG from SP
+  int temp = 5 - numArgs;//the new ARG from SP
   return """
   @SP//update ARG
   D=M
-  @$temp//5 + n
+  @$temp//5 - n
   D=D-A
   @ARG
   M=D
