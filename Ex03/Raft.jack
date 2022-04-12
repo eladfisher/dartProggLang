@@ -27,6 +27,24 @@ class Raft {
       return;
    }
 
+   method int getX(){
+      return x;
+   }
+
+   method boolean is_in_raft(int Bx){
+      var int exp;
+      //let exp = x + sizeX;
+
+      if(Bx < (x + sizeX )){
+         if(Bx > x){
+            return true;
+         }
+      }
+        
+
+      return false;
+   }
+
    
    method void erase() {
       do Screen.setColor(false);
@@ -43,7 +61,7 @@ class Raft {
          do Screen.setColor(true);
          do Screen.drawRectangle(x, y, x + 1, y + sizeY);
       }
-      return;
+       return;
    }
 
    /** Moves the square right by 2 pixels. */
@@ -55,6 +73,6 @@ class Raft {
          do Screen.setColor(true);
          do Screen.drawRectangle((x + sizeX) - 1, y, x + sizeX, y + sizeY);
       }
-      return;
+       return;
    }
 }

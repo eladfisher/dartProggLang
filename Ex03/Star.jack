@@ -1,0 +1,58 @@
+class Star {
+
+   field int x, y; 
+   field int rad; 
+
+ 
+   constructor Star new(int Ax, int Ay, int Arad) {
+      let x = Ax;
+      let y = Ay;
+      let rad = Arad;
+      do draw();
+      return this;
+   }
+
+   
+   method void dispose() {
+      do Memory.deAlloc(this);
+      return;
+   }
+
+   
+   method void draw() {
+      do Screen.setColor(true);
+      do Screen.drawCircle(x, y, rad);
+      return;
+   }
+
+   
+   method void erase() {
+      do Screen.setColor(false);
+      do Screen.drawCircle(x, y, rad);
+      return;
+   }
+
+    method void relocate(int Ax,int Ay,int Arad){
+        let x = Ax;
+        let y = Ay;
+        let rad = Arad;
+
+        return;
+    }
+
+    method int getY(){
+        return y;
+    }
+
+   /** Moves the square left by 2 pixels. */
+   method void moveDown() {
+      if (y < 238) {
+         do Screen.setColor(false);
+         do Screen.drawCircle(x, y, rad);
+         let y = y + 2;
+         do Screen.setColor(true);
+         do Screen.drawCircle(x, y, rad);
+      }
+      return;
+   }
+}

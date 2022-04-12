@@ -3,13 +3,14 @@
 class SquareGame {
    field Raft raft; 
    field int direction; 
-                        
+   field Star star;       
 
    
    constructor SquareGame new() {
       
       let raft = Raft.new(0, 240, 60,10);
-      let direction = 0;  
+      let direction = 0;
+      let star = Star.new(100,120,10); 
       return this;
    }
 
@@ -22,10 +23,24 @@ class SquareGame {
 
    
    method void moveRaft() {
-      
+      var int starHaigh;
+      var int raftX;
+
+
+      do star.moveDown();
+      let raftX = raft.getX();
+      let starHaigh = star.getY();
+
+      if ( (starHaigh + 1) > 230)
+      {
+         do star.erase();
+         do star.relocate(100,120,10);
+      }
+
       if (direction = 3) { do raft.moveLeft(); }
       if (direction = 4) { do raft.moveRight(); }
-      do Sys.wait(5);  
+
+      //do Sys.wait(1);  
       return;
    }
 
@@ -40,15 +55,18 @@ class SquareGame {
          while (key = 0) {
             let key = Keyboard.keyPressed();
             do moveRaft();
+            
          }
+
          if (key = 81)  { let exit = true; }     // q key
          if (key = 130) { let direction = 3; }   // left arrow
          if (key = 132) { let direction = 4; }   // right arrow
-
+         
          
          while (~(key = 0)) {
             let key = Keyboard.keyPressed();
             do moveRaft();
+            
          }
      } 
      return;

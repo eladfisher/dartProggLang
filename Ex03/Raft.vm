@@ -42,6 +42,35 @@ call Screen.drawRectangle 4
 pop temp 0
 push constant 0
 return
+function Raft.getX 0
+push argument 0
+pop pointer 0
+push this 0
+return
+function Raft.is_in_raft 1
+push argument 0
+pop pointer 0
+push argument 1
+push this 0
+push this 2
+add
+lt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push argument 1
+push this 0
+gt
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push constant 0
+not
+return
+label IF_FALSE1
+label IF_FALSE0
+push constant 0
+return
 function Raft.erase 0
 push argument 0
 pop pointer 0
