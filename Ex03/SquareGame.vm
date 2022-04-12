@@ -4,8 +4,9 @@ call Memory.alloc 1
 pop pointer 0
 push constant 0
 push constant 240
+push constant 60
 push constant 10
-call Raft.new 3
+call Raft.new 4
 pop this 0
 push constant 0
 pop this 1
@@ -84,41 +85,23 @@ not
 pop local 1
 label IF_FALSE0
 push local 0
-push constant 131
+push constant 130
 eq
 if-goto IF_TRUE1
 goto IF_FALSE1
 label IF_TRUE1
-push constant 1
+push constant 3
 pop this 1
 label IF_FALSE1
 push local 0
-push constant 133
+push constant 132
 eq
 if-goto IF_TRUE2
 goto IF_FALSE2
 label IF_TRUE2
-push constant 2
-pop this 1
-label IF_FALSE2
-push local 0
-push constant 130
-eq
-if-goto IF_TRUE3
-goto IF_FALSE3
-label IF_TRUE3
-push constant 3
-pop this 1
-label IF_FALSE3
-push local 0
-push constant 132
-eq
-if-goto IF_TRUE4
-goto IF_FALSE4
-label IF_TRUE4
 push constant 4
 pop this 1
-label IF_FALSE4
+label IF_FALSE2
 label WHILE_EXP2
 push local 0
 push constant 0
