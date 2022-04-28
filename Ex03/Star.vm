@@ -30,8 +30,13 @@ call Screen.setColor 1
 pop temp 0
 push this 0
 push this 1
+push this 0
 push this 2
-call Screen.drawCircle 3
+add
+push this 1
+push this 2
+add
+call Screen.drawRectangle 4
 pop temp 0
 push constant 0
 return
@@ -43,8 +48,13 @@ call Screen.setColor 1
 pop temp 0
 push this 0
 push this 1
+push this 0
 push this 2
-call Screen.drawCircle 3
+add
+push this 1
+push this 2
+add
+call Screen.drawRectangle 4
 pop temp 0
 push constant 0
 return
@@ -64,6 +74,11 @@ push argument 0
 pop pointer 0
 push this 1
 return
+function Star.getX 0
+push argument 0
+pop pointer 0
+push this 0
+return
 function Star.moveDown 0
 push argument 0
 pop pointer 0
@@ -78,11 +93,16 @@ call Screen.setColor 1
 pop temp 0
 push this 0
 push this 1
+push this 0
 push this 2
-call Screen.drawCircle 3
+add
+push this 1
+push this 2
+add
+call Screen.drawRectangle 4
 pop temp 0
 push this 1
-push constant 2
+push constant 1
 add
 pop this 1
 push constant 0
@@ -91,8 +111,13 @@ call Screen.setColor 1
 pop temp 0
 push this 0
 push this 1
+push this 0
 push this 2
-call Screen.drawCircle 3
+add
+push this 1
+push this 2
+add
+call Screen.drawRectangle 4
 pop temp 0
 label IF_FALSE0
 push constant 0

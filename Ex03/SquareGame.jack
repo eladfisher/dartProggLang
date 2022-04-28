@@ -4,17 +4,44 @@ class SquareGame {
    field Raft raft; 
    field int direction; 
    field Star star;       
+   field Random random;
+   field Array placesX;
+   field int i;
+   field int score;
 
-   
    constructor SquareGame new() {
+
+      let placesX = Array.new(10);
       
+      let i = 0 ;
+      let score = 0 ;
+
+      do innitX(placesX);
+     
+
+      let random = Random.new(1238);
       let raft = Raft.new(0, 240, 60,10);
       let direction = 0;
       let star = Star.new(100,120,10); 
       return this;
    }
 
-   
+   method void innitX(Array a){
+      let a[0] = 100;
+      let a[1] = 200;
+      let a[2] = 300;
+      let a[3] = 180;
+      let a[4] = 80;
+      let a[5] = 250;
+      let a[6] = 50;
+      let a[7] = 150;
+      let a[8] = 300;
+      let  a[9] = 200;
+
+      return;
+   }
+
+
    method void dispose() {
       do raft.dispose();
       do Memory.deAlloc(this);
@@ -25,16 +52,45 @@ class SquareGame {
    method void moveRaft() {
       var int starHaigh;
       var int raftX;
+      var int temp1;
+      
 
 
       do star.moveDown();
       let raftX = raft.getX();
       let starHaigh = star.getY();
 
-      if ( (starHaigh + 1) > 230)
+      if ( (starHaigh + 1) > 229)
       {
+         if(star.getX()> raftX)
+         {
+            let temp1=raftX + 60;
+            if(star.getX() < temp1)
+            {
+               let score = score + 1;
+
+               do Output.moveCursor(0, 0);
+
+               do Output.printString("score: ");
+              do  Output.printInt(score);
+
+
+            }
+         }
+
+
          do star.erase();
-         do star.relocate(100,120,10);
+
+         
+
+         let i = i + 1;
+
+         if(i=10){
+            let i=0;
+         }
+
+         //do Output.printInt(i);
+         do star.relocate(placesX[i],120,10);
       }
 
       if (direction = 3) { do raft.moveLeft(); }

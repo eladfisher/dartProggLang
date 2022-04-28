@@ -21,14 +21,14 @@ class Star {
    
    method void draw() {
       do Screen.setColor(true);
-      do Screen.drawCircle(x, y, rad);
+      do Screen.drawRectangle(x, y, x+rad, y+rad);
       return;
    }
 
    
    method void erase() {
       do Screen.setColor(false);
-      do Screen.drawCircle(x, y, rad);
+      do Screen.drawRectangle(x, y, x+rad, y+rad);
       return;
    }
 
@@ -44,14 +44,19 @@ class Star {
         return y;
     }
 
-   /** Moves the square left by 2 pixels. */
+   method int getX(){
+        return x;
+    }
+
+
+   /** Moves the square left by 1 pixels. */
    method void moveDown() {
       if (y < 238) {
          do Screen.setColor(false);
-         do Screen.drawCircle(x, y, rad);
-         let y = y + 2;
+         do Screen.drawRectangle(x, y, x+rad, y+rad);
+         let y = y + 1;
          do Screen.setColor(true);
-         do Screen.drawCircle(x, y, rad);
+         do Screen.drawRectangle(x, y, x+rad, y+rad);
       }
       return;
    }
