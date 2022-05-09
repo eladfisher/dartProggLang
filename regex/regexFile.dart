@@ -35,7 +35,7 @@ main(List<String> arguments) async {
 
 
     var output = new File(FileInputPath + outputFileName+"US.xml");
-    output.writeAsStringSync("works");
+    //output.writeAsStringSync("works");
     // print(output.path);
      var input = new File(file.path);
      var engine = new CompilationEngine(input,output);

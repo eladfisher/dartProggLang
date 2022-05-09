@@ -14,7 +14,7 @@ class CompilationEngine {
   }
 
   void CompileClass() {
-    OUTfile.writeAsStringSync("<tokens>",mode: FileMode.append);
+    OUTfile.writeAsStringSync("<tokens>\n",mode: FileMode.append);
     while (tokenizer.hasMoreTokens()) {
       String type = tokenizer.tokenType();
       switch (type) {
