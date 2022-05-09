@@ -6,10 +6,13 @@ class SquareGame {
    field Star star;       
    field Random random;
    field Array placesX;
-   field int i;
+   /* 
+   this is a message
+   */    /* */field int i;
    field int score;
 
-   constructor SquareGame new() {
+   
+     constructor SquareGame  new() { 
 
       let placesX = Array.new(10);
       
@@ -62,7 +65,8 @@ class SquareGame {
 
       if ( (starHaigh + 1) > 229)
       {
-         if(star.getX()> raftX)
+         if(star.getX()>
+          raftX)
          {
             let temp1=raftX + 60;
             if(star.getX() < temp1)

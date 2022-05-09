@@ -1,17 +1,51 @@
-
-
-
+import 'dart:convert';
 import 'dart:io';
 
-main(List<String> arguments) {
+import 'CompilationEngine.dart';
+//C:\nand2tetris\projects\10\ArrayTest
+//C:\nand2tetris\projects\10\ArrayTest
+main(List<String> arguments) async {
+  var FileInputPath = "C:\\nand2tetris\\projects\\10\\ArrayTest";
 
-  String path = arguments[0];
+  // Get the system temp directory .
+  var systemTempDir = Directory.systemTemp;
+  var path = FileInputPath;
 
-  String outputFilePath = path + path.substring(path.lastIndexOf("\\")) +
-      ".asm";
+  final dir = Directory(FileInputPath);
+  final List<FileSystemEntity> entities = await dir.list().toList();
 
-  RegExp reg = new RegExp(r'^[a-zA-Z0-9]+$');
+  //outputFile.writeAsStringSync(push("constant", "16"));
+  for (var file in entities) {
+    if (file.path.endsWith("Sys.vm")) {
+
+    }
+  }
+
+  for (var file in entities) {
+    if (!file.path.endsWith(".jack")) {
+      continue;
+    }
+
+    path = file.path;
+    //print("compiling $path");
+
+    String outputFileName = path.substring(path.lastIndexOf("\\"),path.lastIndexOf(".jack"));
+
+    //print("file name = $outputFileName");
 
 
-  
+    var output = new File(FileInputPath + outputFileName+"US.xml");
+    output.writeAsStringSync("works");
+    // print(output.path);
+     var input = new File(file.path);
+     var engine = new CompilationEngine(input,output);
+     engine.CompileClass();
+  }
+
+
+
+
+
+
+
 }

@@ -33,6 +33,7 @@ class CompilationEngine {
           CompileSTRING_CONST();
           break;
       }
+      tokenizer.advance();
     }
   }
 
