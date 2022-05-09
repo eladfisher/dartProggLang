@@ -36,8 +36,10 @@ class Tokenizer {
 
     String symbols = "{}()[].,;+-*/&|<>=~";
 
-    if(content[index].contains(symbols)){
+    if(symbols.contains(content[index])){
       type = "SYMBOL";
+      token = content[index];
+      index++;
     }
 
     if(content[index].contains("\"")){
@@ -49,7 +51,7 @@ class Tokenizer {
   }
 
   String tokenType() {
-    if (isKeyWord(type))
+    if (isKeyWord(token))
       return "KEYWORD";
 
     return type;
