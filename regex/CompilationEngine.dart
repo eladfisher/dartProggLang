@@ -73,7 +73,7 @@ class CompilationEngine {
 
   void CompileSymbol() {
     var a= tokenizer.symbol();
-    correct(a);
+    a = correct(a);
     OUTfile.writeAsStringSync("<symbol> " +a+" </symbol>\n",mode: FileMode.append);
   }
 
