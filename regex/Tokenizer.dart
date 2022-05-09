@@ -1,5 +1,5 @@
+import 'dart:io';
 
-import 'dart:html';
 
 class Tokenizer{
   late String file;
@@ -23,6 +23,23 @@ class Tokenizer{
   }
 
   String keyword(){
+    return "";
+  }
+
+
+  String symbol(){
+    return "";
+  }
+
+  String identifier(){
+    return "";
+  }
+
+  int intVal(){
+    return -1;
+  }
+
+  String stringVal(){
     return "";
   }
 
