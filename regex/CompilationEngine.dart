@@ -13,6 +13,35 @@ class CompilationEngine {
     tokenizer = new Tokenizer(INfile);
   }
 
+  void write(String s)
+  {
+    OUTfile.writeAsStringSync(s,mode: FileMode.append);
+  }
+
+
+  void CompileKeyWord() {
+    write("<keyword>" + tokenizer.keyword()+"</keyword>\n");
+  }
+
+  void CompileSymbol() {
+    var a= tokenizer.symbol();
+    correct(a);
+    write("<symbol>" +a+"</symbol>\n");
+  }
+
+  void CompileSTRING_CONST() {
+    write("<stringConstant>"+ tokenizer.stringVal() +"</stringConstant>\n");
+  }
+
+  void CompileIDENTIFIER() {
+    write("<identifier>"+ tokenizer.identifier() +"</identifier>\n");
+  }
+
+  void CompileINT_CONST() {
+    write("<intConstant>"+ tokenizer.intVal().toString() +"</intConstant>\n");
+  }
+
+
   void CompileClass() {
     OUTfile.writeAsStringSync("<tokens>\n",mode: FileMode.append);
     while (tokenizer.hasMoreTokens()) {
@@ -67,27 +96,7 @@ class CompilationEngine {
 
   void CompileExpressionList() {}
 
-  void CompileKeyWord() {
-    OUTfile.writeAsStringSync("<keyword> " + tokenizer.keyword()+" </keyword>\n",mode: FileMode.append);
-  }
 
-  void CompileSymbol() {
-    var a= tokenizer.symbol();
-    a = correct(a);
-    OUTfile.writeAsStringSync("<symbol> " +a+" </symbol>\n",mode: FileMode.append);
-  }
-
-  void CompileSTRING_CONST() {
-    OUTfile.writeAsStringSync("<stringConstant> "+ tokenizer.stringVal() +" </stringConstant>\n",mode: FileMode.append);
-  }
-
-  void CompileIDENTIFIER() {
-    OUTfile.writeAsStringSync("<identifier> "+ tokenizer.identifier() +" </identifier>\n",mode: FileMode.append);
-  }
-
-  void CompileINT_CONST() {
-    OUTfile.writeAsStringSync("<intConstant> "+ tokenizer.intVal().toString() +" </intConstant>\n",mode: FileMode.append);
-  }
 
   String correct(String a)
   {
