@@ -125,7 +125,7 @@ class Tokenizer {
   void StringConst() {
 
     type = "STRING_CONST";
-    token += content[index];
+    token="";
     index++;
 
     while(content[index].contains("\"")){
