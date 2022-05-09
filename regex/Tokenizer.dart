@@ -21,7 +21,7 @@ class Tokenizer {
 
   void advance() {
     token = "";
-
+    String symbols = "{}()[].,;+-*/&|<>=~";
     content = content.substring(index);
     index = 0;
     content = content.trim();
@@ -30,19 +30,17 @@ class Tokenizer {
       readId();
     }
 
-    if(content[index].contains(new RegExp(r"[0-9]"))){
+    else if(content[index].contains(new RegExp(r"[0-9]"))){
       number();
     }
 
-    String symbols = "{}()[].,;+-*/&|<>=~";
-
-    if(symbols.contains(content[index])){
+    else if(symbols.contains(content[index])){
       type = "SYMBOL";
       token = content[index];
       index++;
     }
 
-    if(content[index].contains("\"")){
+    else if(content[index].contains("\"")){
       StringConst();
     }
 
