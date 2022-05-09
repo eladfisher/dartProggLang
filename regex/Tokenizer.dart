@@ -110,7 +110,8 @@ class Tokenizer {
   bool isKeyWord (String s)
   {
     String list="class method function constructor int boolean char void var static field let do if else while return true false null this";
-    return list.contains(s);
+
+    return list.split(" ").indexOf(s)!=-1;
   }
 
   void number() {
@@ -128,10 +129,11 @@ class Tokenizer {
     token="";
     index++;
 
-    while(content[index].contains("\"")){
+    while(!content[index].contains("\"")){
       token += content[index];
       index++;
     }
+    index++;
 
   }
 }
