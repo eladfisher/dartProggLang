@@ -76,15 +76,15 @@ class CompilationEngine {
   }
 
   void CompileSTRING_CONST() {
-    OUTfile.writeAsStringSync("<stringConstant>"+ tokenizer.stringVal() +"</stringConstant>",mode: FileMode.append);
+    OUTfile.writeAsStringSync("<stringConstant>"+ tokenizer.stringVal() +"</stringConstant>\n",mode: FileMode.append);
   }
 
   void CompileIDENTIFIER() {
-    OUTfile.writeAsStringSync("<identifier>"+ tokenizer.identifier() +"</identifier>",mode: FileMode.append);
+    OUTfile.writeAsStringSync("<identifier>"+ tokenizer.identifier() +"</identifier>\n",mode: FileMode.append);
   }
 
   void CompileINT_CONST() {
-    OUTfile.writeAsStringSync("<intConstant>"+ tokenizer.intVal().toString() +"</intConstant>",mode: FileMode.append);
+    OUTfile.writeAsStringSync("<intConstant>"+ tokenizer.intVal().toString() +"</intConstant>\n",mode: FileMode.append);
   }
 
   String correct(String a)
