@@ -12,12 +12,6 @@ main(List<String> arguments) {
 
   RegExp reg = new RegExp(r'^[a-zA-Z0-9]+$');
 
-  var regRes = reg.allMatches(input);
 
-  for(var s in regRes){
-    print(s.toString());
-  }
-
-  print(regRes);
   
 }
