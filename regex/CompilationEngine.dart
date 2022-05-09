@@ -25,7 +25,7 @@ class CompilationEngine {
 
   void CompileSymbol() {
     var a= tokenizer.symbol();
-    correct(a);
+    a=correct(a);
     write("<symbol>" +a+"</symbol>\n");
   }
 
