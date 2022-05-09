@@ -36,7 +36,7 @@ class CompilationEngine {
       }
       tokenizer.advance();
     }
-    OUTfile.writeAsStringSync("<\\tokens>",mode: FileMode.append);
+    OUTfile.writeAsStringSync("</tokens>",mode: FileMode.append);
   }
 
   void CompileClassVarDec() {}
