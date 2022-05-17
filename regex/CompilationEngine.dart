@@ -16,35 +16,181 @@ class CompilationEngine {
 
   void write(String s)
   {
-    OUTfile.writeAsStringSync(s,mode: FileMode.append);
+    OUTfile.writeAsStringSync(getTAB(0)+s,mode: FileMode.append);
   }
 
-
   void CompileKeyWord() {
-    write("<keyword>" + tokenizer.keyword()+"</keyword>\n");
+    write(getTAB(0)+"<keyword>" + tokenizer.keyword()+"</keyword>\n");
+    tokenizer.advance();
   }
 
   void CompileSymbol() {
     var a= tokenizer.symbol();
     a=correct(a);
-    write("<symbol>" +a+"</symbol>\n");
+    write(getTAB(0)+"<symbol>" +a+"</symbol>\n");
+    tokenizer.advance();
   }
 
   void CompileSTRING_CONST() {
-    write("<stringConstant>"+ tokenizer.stringVal() +"</stringConstant>\n");
+    write(getTAB(0)+"<stringConstant>"+ tokenizer.stringVal() +"</stringConstant>\n");
+    tokenizer.advance();
+
   }
 
   void CompileIDENTIFIER() {
-    write("<identifier>"+ tokenizer.identifier() +"</identifier>\n");
+    write(getTAB(0)+"<identifier>"+ tokenizer.identifier() +"</identifier>\n");
+    tokenizer.advance();
   }
 
   void CompileINT_CONST() {
-    write("<intConstant>"+ tokenizer.intVal().toString() +"</intConstant>\n");
+    write(getTAB(0)+"<intConstant>"+ tokenizer.intVal().toString() +"</intConstant>\n");
+    tokenizer.advance();
   }
 
+  void CompileStatements() {
+    bool there_is=false;
+    while(tokenizer.type=="KEYWORD")
+    {
+      if(tokenizer.content=="let")
+      {
+        CompileStatements_START(there_is);
+        there_is=true;
+        CompileLet();
+        CompileStatements_FINISH();
+      }
+      else if(tokenizer.content=="do")
+      {
+        CompileStatements_START(there_is);
+        there_is=true;
+        CompileDo();
+        CompileStatements_FINISH();
+      }
+      else if(tokenizer.content=="if")
+      {
+        CompileStatements_START(there_is);
+        there_is=true;
+        CompileIf();
+        CompileStatements_FINISH();
+      }
+      else if(tokenizer.content=="while")
+      {
+        CompileStatements_START(there_is);
+        there_is=true;
+        CompileWhile();
+        CompileStatements_FINISH();
+      }
+      else if(tokenizer.content=="return")
+      {
+        CompileStatements_START(there_is);
+        there_is=true;
+        CompileReturn();
+        CompileStatements_FINISH();
+      }
+
+      else{
+        if (there_is==true)
+        {
+          numTabs--;
+          write(getTAB(0)+"</statements>\n");
+        }
+        return;}
+    }
+    if (there_is==true)
+    {
+      numTabs--;
+      write(getTAB(0)+"</statements>\n");
+    }
+  }
+
+  void CompileStatements_START(bool there_is)
+  {
+    if(there_is==false){
+      write(getTAB(0)+"<statements>\n");
+      numTabs++;}
+    write(getTAB(0)+"<statement>\n");
+    numTabs++;
+  }
+
+  void CompileStatements_FINISH()
+  {
+    numTabs--;
+    write(getTAB(0)+"</statement>\n");
+  }
+
+  String getTAB(int i)
+  {
+    return(" "*(numTabs+i));
+  }
+
+  void CompileLet() {
+    //let varName([expression])?=expression;
+    CompileKeyWord();//let
+    CompileSymbol();//(
+    CompileExpression();
+    CompileSymbol();//)
+
+    if(tokenizer.content=="[")
+    {
+      CompileSymbol();//[
+      CompileExpression();
+      CompileSymbol();//]
+    }
+    CompileSymbol();//=
+    CompileExpression();
+    CompileSymbol();//;
+  }
+
+  void CompileIf() {
+    //if (exp){stat}(else{stat})?
+    CompileKeyWord();//if
+    CompileSymbol();//(
+    CompileExpression();
+    CompileSymbol();//)
+    CompileSymbol();//{
+    CompileStatements();
+    CompileSymbol();//}
+    if(tokenizer.content=="else")
+    {
+      CompileKeyWord();//else
+      CompileSymbol();//{
+      CompileStatements();
+      CompileSymbol();//}
+    }
+  }
+
+  void CompileWhile() {
+    //while (exp){stat}
+    CompileKeyWord();//while
+    CompileSymbol();//(
+    CompileExpression();
+    CompileSymbol();//)
+    CompileSymbol();//{
+    CompileStatements();
+    CompileSymbol();//}
+  }
+
+  void CompileDo() {
+    CompileKeyWord(); //do
+    write("<subroutineCall>\n");
+    numTabs++;
+    //TODO subroutineCall
+    numTabs--;
+    write("</subroutineCall>\n");
+    CompileSymbol();//;
+  }
+
+  void CompileReturn() {
+    CompileKeyWord(); //return
+    if (tokenizer.content!=";")
+    {
+      CompileExpression();
+    }
+    CompileSymbol();//;
+  }
 
   void CompileClass() {
-
+   write("<class>\n");
+   numTabs++;
 
     CompileKeyWord();
     //tokenizer.advance();
@@ -62,7 +208,8 @@ class CompilationEngine {
 
     CompileSymbol();
 
-
+    numTabs--;
+    write("</class>\n");
     //tokenizer.advance();
 
     // OUTfile.writeAsStringSync("<tokens>\n",mode: FileMode.append);
@@ -91,7 +238,7 @@ class CompilationEngine {
   }
 
   void CompileClassVarDec() {
-
+    write("<classVarDec>\n");
     numTabs++;
 
     String first = tokenizer.keyword();
@@ -123,11 +270,11 @@ class CompilationEngine {
     //tokenizer.advance();
 
     numTabs--;
-
+    write("</classVarDec>\n");
   }
 
   void CompileSubroutineDec() {
-
+    write("<subroutineDec>\n");
     numTabs++;
 
     CompileKeyWord();
@@ -160,11 +307,11 @@ class CompilationEngine {
 
     CompileSubroutineBody();
     numTabs--;
-
+    write("</subroutineDec>\n");
   }
 
   void CompileParameterList() {
-
+    write("<parameterList>\n");
     numTabs++;
 
     //check if there are params
@@ -197,11 +344,11 @@ class CompilationEngine {
     }
 
     numTabs--;
-
+    write("</parameterList>\n");
   }
 
   void CompileSubroutineBody() {
-
+    write("<subroutineBody>\n");
     numTabs++;
 
     CompileSymbol();//{
@@ -213,11 +360,11 @@ class CompilationEngine {
     CompileSymbol();//}
 
     numTabs--;
-
+    write("</subroutineBody>\n");
   }
 
   void CompileVarDec() {
-
+    write("<varDec>\n");
     numTabs++;
 
     CompileKeyWord();//"var"
@@ -243,27 +390,14 @@ class CompilationEngine {
     CompileSymbol();
 
     numTabs--;
+    write("</varDec>\n");
   }
-
-  void CompileStatements() {}
-
-  void CompileLet() {}
-
-  void CompileIf() {}
-
-  void CompileWhile() {}
-
-  void CompileDo() {}
-
-  void CompileReturn() {}
 
   void CompileExpression() {}
 
   void CompileTerm() {}
 
   void CompileExpressionList() {}
-
-
 
   String correct(String a)
   {
@@ -293,7 +427,7 @@ class CompilationEngine {
   }
 
   void compileSubroutineDecList(){
-    while(tokenizer.keyword() == "int" || tokenizer.keyword()=="char"||tokenizer.keyword()=="boolean"){
+    while(tokenizer.keyword() == "constructor" || tokenizer.keyword()=="function"||tokenizer.keyword()=="method"){
       CompileSubroutineDec();
     }
   }
