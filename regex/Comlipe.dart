@@ -86,74 +86,36 @@ class Compile {
   void CompileVarDec() {}
 
   void CompileStatements() {
-    bool there_is=false;
-    while(tokenizer.type=="KEYWORD")
-      {
-        if(tokenizer.content=="let")
-          {
-            CompileStatements_START(there_is);
-            there_is=true;
-            CompileLet();
-            CompileStatements_FINISH();
-          }
-        else if(tokenizer.content=="do")
-        {
-          CompileStatements_START(there_is);
-          there_is=true;
-          CompileDo();
-          CompileStatements_FINISH();
-        }
-        else if(tokenizer.content=="if")
-        {
-          CompileStatements_START(there_is);
-          there_is=true;
-          CompileIf();
-          CompileStatements_FINISH();
-        }
-        else if(tokenizer.content=="while")
-        {
-          CompileStatements_START(there_is);
-          there_is=true;
-          CompileWhile();
-          CompileStatements_FINISH();
-        }
-        else if(tokenizer.content=="return")
-        {
-          CompileStatements_START(there_is);
-          there_is=true;
-          CompileReturn();
-          CompileStatements_FINISH();
-        }
-
-        else{
-          if (there_is==true)
-            {
-              numTabs--;
-              write(getTAB(0)+"</statements>\n");
-            }
-            return;}
+    write(getTAB(0) + "<statements>\n");
+    numTabs++;
+    while (tokenizer.type == "KEYWORD") {
+      if (tokenizer.content == "let") {
+        CompileLet();
       }
-    if (there_is==true)
-    {
+      else if (tokenizer.content == "do") {
+        CompileDo();
+      }
+      else if (tokenizer.content == "if") {
+        CompileIf();
+      }
+      else if (tokenizer.content == "while") {
+        CompileWhile();
+      }
+      else if (tokenizer.content == "return") {
+        CompileReturn();
+      }
+
+      else {
+        numTabs--;
+        write(getTAB(0) + "</statements>\n");
+        return;
+      }
       numTabs--;
-      write(getTAB(0)+"</statements>\n");
+      write(getTAB(0) + "</statements>\n");
     }
   }
 
-  void CompileStatements_START(bool there_is)
-  {
-    if(there_is==false){
-    write(getTAB(0)+"<statements>\n");
-    numTabs++;}
-    write(getTAB(0)+"<statement>\n");
-    numTabs++;
-  }
 
-  void CompileStatements_FINISH()
-  {
-    numTabs--;
-    write(getTAB(0)+"</statement>\n");
-  }
 
   String getTAB(int i)
   {
@@ -161,6 +123,8 @@ class Compile {
   }
 
   void CompileLet() {
+    write(getTAB(0)+"<letStatement>\n");
+    numTabs++;
     //let varName([expression])?=expression;
     CompileKeyWord();//let
     CompileSymbol();//(
@@ -176,9 +140,13 @@ class Compile {
     CompileSymbol();//=
     CompileExpression();
     CompileSymbol();//;
+    numTabs--;
+    write(getTAB(0)+"</letStatement>\n");
   }
 
   void CompileIf() {
+    write(getTAB(0)+"<ifStatement>\n");
+    numTabs++;
     //if (exp){stat}(else{stat})?
     CompileKeyWord();//if
     CompileSymbol();//(
@@ -194,9 +162,13 @@ class Compile {
         CompileStatements();
         CompileSymbol();//}
       }
+    numTabs--;
+    write(getTAB(0)+"</ifStatement>\n");
   }
 
   void CompileWhile() {
+    write(getTAB(0)+"<whileStatement>\n");
+    numTabs++;
     //while (exp){stat}
     CompileKeyWord();//while
     CompileSymbol();//(
@@ -205,9 +177,13 @@ class Compile {
     CompileSymbol();//{
     CompileStatements();
     CompileSymbol();//}
+    numTabs--;
+    write(getTAB(0)+"</whileStatement>\n");
   }
 
   void CompileDo() {
+    write(getTAB(0)+"<doStatement>\n");
+    numTabs++;
     CompileKeyWord(); //do
     write("<subroutineCall>\n");
     numTabs++;
@@ -215,15 +191,21 @@ class Compile {
     numTabs--;
     write("</subroutineCall>\n");
     CompileSymbol();//;
+    numTabs--;
+    write(getTAB(0)+"</doStatement>\n");
   }
 
   void CompileReturn() {
+    write(getTAB(0)+"<returnStatement>\n");
+    numTabs++;
     CompileKeyWord(); //return
     if (tokenizer.content!=";")
       {
         CompileExpression();
       }
     CompileSymbol();//;
+    numTabs--;
+    write(getTAB(0)+"</returnStatement>\n");
   }
 
   void CompileExpression() {}
