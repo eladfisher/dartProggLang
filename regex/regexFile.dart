@@ -5,7 +5,7 @@ import 'CompilationEngine.dart';
 //C:\nand2tetris\projects\10\ArrayTest
 //C:\nand2tetris\projects\10\ArrayTest
 main(List<String> arguments) async {
-  var FileInputPath =  "C:\\nand2tetris\\projects\\10\\ExpressionLessSquare";
+  var FileInputPath =  "C:\\nand2tetris\\projects\\10\\Square";
 
   // Get the system temp directory .
   var systemTempDir = Directory.systemTemp;

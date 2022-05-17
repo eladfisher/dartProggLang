@@ -19,43 +19,48 @@ class CompilationEngine {
   }
 
   void CompileKeyWord() {
-    write(getTAB(0) + "<keyword>" + tokenizer.keyword() + "</keyword>\n");
+    write("<keyword> " + tokenizer.keyword() + " </keyword>\n");
     tokenizer.advance();
   }
 
   void CompileSymbol() {
     var a = tokenizer.symbol();
     a = correct(a);
-    write(getTAB(0) + "<symbol>" + a + "</symbol>\n");
-    tokenizer.advance();
+    write("<symbol> " + a + " </symbol>\n");
+
+    if(tokenizer.hasMoreTokens())
+      {
+        tokenizer.advance();
+      }
+
   }
 
   void CompileSTRING_CONST() {
-    write(getTAB(0) +
-        "<stringConstant>" +
+    write(
+        "<stringConstant> " +
         tokenizer.stringVal() +
-        "</stringConstant>\n");
+        " </stringConstant>\n");
     tokenizer.advance();
   }
 
   void CompileIDENTIFIER() {
-    write(getTAB(0) +
-        "<identifier>" +
+    write(
+        "<identifier> " +
         tokenizer.identifier() +
-        "</identifier>\n");
+        " </identifier>\n");
     tokenizer.advance();
   }
 
   void CompileINT_CONST() {
-    write(getTAB(0) +
-        "<intConstant>" +
+    write(
+        "<integerConstant> " +
         tokenizer.intVal().toString() +
-        "</intConstant>\n");
+        " </integerConstant>\n");
     tokenizer.advance();
   }
 
   void CompileStatements() {
-    write(getTAB(0) + "<statements>\n");
+    write("<statements>\n");
     numTabs++;
     while (tokenizer.tokenType() == "KEYWORD") {
       if (tokenizer.keyword() == "let") {
@@ -68,14 +73,12 @@ class CompilationEngine {
         CompileWhile();
       } else if (tokenizer.keyword() == "return") {
         CompileReturn();
-      } else {
-        numTabs--;
-        write(getTAB(0) + "</statements>\n");
-        return;
       }
-      numTabs--;
-      write(getTAB(0) + "</statements>\n");
     }
+
+    numTabs--;
+    write("</statements>\n");
+
   }
 
   String getTAB(int i) {
@@ -83,7 +86,7 @@ class CompilationEngine {
   }
 
   void CompileLet() {
-    write(getTAB(0) + "<letStatement>\n");
+    write("<letStatement>\n");
     numTabs++;
     //let varName([expression])?=expression;
     CompileKeyWord(); //let
@@ -98,11 +101,11 @@ class CompilationEngine {
     CompileExpression();
     CompileSymbol(); //;
     numTabs--;
-    write(getTAB(0) + "</letStatement>\n");
+    write("</letStatement>\n");
   }
 
   void CompileIf() {
-    write(getTAB(0) + "<ifStatement>\n");
+    write("<ifStatement>\n");
     numTabs++;
     //if (exp){stat}(else{stat})?
     CompileKeyWord(); //if
@@ -119,11 +122,11 @@ class CompilationEngine {
       CompileSymbol(); //}
     }
     numTabs--;
-    write(getTAB(0) + "</ifStatement>\n");
+    write("</ifStatement>\n");
   }
 
   void CompileWhile() {
-    write(getTAB(0) + "<whileStatement>\n");
+    write("<whileStatement>\n");
     numTabs++;
     //while (exp){stat}
     CompileKeyWord(); //while
@@ -134,11 +137,11 @@ class CompilationEngine {
     CompileStatements();
     CompileSymbol(); //}
     numTabs--;
-    write(getTAB(0) + "</whileStatement>\n");
+    write("</whileStatement>\n");
   }
 
   void CompileDo() {
-    write(getTAB(0) + "<doStatement>\n");
+    write("<doStatement>\n");
     numTabs++;
     CompileKeyWord(); //do
     CompileIDENTIFIER();//subrutinenumae/class name/varname
@@ -151,11 +154,11 @@ class CompilationEngine {
     CompileSymbol();//)
     CompileSymbol(); //;
     numTabs--;
-    write(getTAB(0) + "</doStatement>\n");
+    write("</doStatement>\n");
   }
 
   void CompileReturn() {
-    write(getTAB(0) + "<returnStatement>\n");
+    write("<returnStatement>\n");
     numTabs++;
     CompileKeyWord(); //return
     if (tokenizer.symbol() != ";") {
@@ -163,7 +166,7 @@ class CompilationEngine {
     }
     CompileSymbol(); //;
     numTabs--;
-    write(getTAB(0) + "</returnStatement>\n");
+    write("</returnStatement>\n");
   }
 
   void CompileClass() {
@@ -298,6 +301,9 @@ class CompilationEngine {
       CompileIDENTIFIER();
 
       while (tokenizer.symbol() == ",") {
+
+        CompileSymbol();//,
+
         //type
         if (tokenizer.tokenType() == "KEYWORD") {
           CompileKeyWord();
@@ -347,6 +353,7 @@ class CompilationEngine {
 
     //"," varName)*
     while (tokenizer.symbol() == ",") {
+      CompileSymbol();
       CompileIDENTIFIER();
     }
 
@@ -357,12 +364,102 @@ class CompilationEngine {
   }
 
   void CompileExpression() {
-    CompileIDENTIFIER();
+    write("<expression>\n");
+    numTabs++;
+
+    String op = "+-*/&|<>=";
+
+    CompileTerm();//term
+
+    //(op term)*
+    while(op.contains(tokenizer.symbol())){
+      CompileSymbol();
+      CompileTerm();
+    }
+
+    numTabs--;
+    write("</expression>\n");
+
+    
   }
 
-  void CompileTerm() {}
+  void CompileTerm() {
 
-  void CompileExpressionList() {}
+    write("<term>\n");
+    numTabs++;
+
+    switch (tokenizer.tokenType()){
+      case "INT_CONST"://integerConstant
+        CompileINT_CONST();
+        break;
+      case "STRING_CONST"://string constant
+        CompileSTRING_CONST();
+        break;
+      case"KEYWORD"://keyword constant
+        CompileKeyWord();
+        break;
+      case "IDENTIFIER"://varName|varName[Expression]|subroutineCall
+        CompileIDENTIFIER();
+        if(tokenizer.symbol()=="["){//varName[Expression]
+          CompileSymbol();//[
+          CompileExpression();//Expression
+          CompileSymbol();//]
+        }
+
+        else if(tokenizer.symbol()=="("||tokenizer.symbol()=="."){//subroutine call{
+          if(tokenizer.symbol()=="."){
+            CompileSymbol();
+            CompileIDENTIFIER();
+          }
+          CompileSymbol();//(
+          CompileExpressionList();
+          CompileSymbol();//)
+        }
+
+
+
+        break;
+      case "SYMBOL"://(Expression)|unary term
+      if(tokenizer.symbol()=="("){//(Expression)
+        CompileSymbol();//(
+        CompileExpression();//expression
+        CompileSymbol();//)
+      }
+      else{//unaryTerm
+        CompileSymbol();//unary op
+        CompileTerm();//term
+      }
+
+        break;
+
+    }
+
+    numTabs--;
+    write("</term>\n");
+
+  }
+
+  void CompileExpressionList() {
+
+    write("<expressionList>\n");
+    numTabs++;
+
+    if(tokenizer.symbol()!=")")
+      {
+        CompileExpression();
+
+        while(tokenizer.symbol()==","){
+          CompileSymbol();
+          CompileExpression();
+        }
+
+
+      }
+
+    numTabs--;
+    write("</expressionList>\n");
+
+  }
 
   String correct(String a) {
     if (a == "<") {
@@ -371,7 +468,7 @@ class CompilationEngine {
       a = "&gt;";
     } else if (a == "\"") {
       a = "&quet;";
-    } else if (a == "\$") {
+    } else if (a == "&") {
       a = "&amp;";
     }
     return a;
