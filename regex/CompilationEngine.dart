@@ -43,29 +43,43 @@ class CompilationEngine {
 
 
   void CompileClass() {
-    OUTfile.writeAsStringSync("<tokens>\n",mode: FileMode.append);
-    while (tokenizer.hasMoreTokens()) {
-      String type = tokenizer.tokenType();
-      switch (type) {
-        case "KEYWORD":
-          CompileKeyWord();
-          break;
-        case "SYMBOL":
-          CompileSymbol();
-          break;
-        case "IDENTIFIER":
-          CompileIDENTIFIER();
-          break;
-        case "INT_CONST":
-          CompileINT_CONST();
-          break;
-        case "STRING_CONST":
-          CompileSTRING_CONST();
-          break;
-      }
-      tokenizer.advance();
-    }
-    OUTfile.writeAsStringSync("</tokens>",mode: FileMode.append);
+    CompileKeyWord();
+    tokenizer.advance();
+
+    CompileIDENTIFIER();
+    tokenizer.advance();
+
+    CompileSymbol();
+    tokenizer.advance();
+
+    String type = tokenizer.tokenType();
+
+    compileClassVarDecList();
+
+
+    // OUTfile.writeAsStringSync("<tokens>\n",mode: FileMode.append);
+    // while (tokenizer.hasMoreTokens()) {
+    //   String type = tokenizer.tokenType();
+    //   switch (type) {
+    //     case "KEYWORD":
+    //       CompileKeyWord();
+    //       break;
+    //     case "SYMBOL":
+    //       CompileSymbol();
+    //       break;
+    //     case "IDENTIFIER":
+    //       CompileIDENTIFIER();
+    //       break;
+    //     case "INT_CONST":
+    //       CompileINT_CONST();
+    //       break;
+    //     case "STRING_CONST":
+    //       CompileSTRING_CONST();
+    //       break;
+    //   }
+    //   tokenizer.advance();
+    // }
+    // OUTfile.writeAsStringSync("</tokens>",mode: FileMode.append);
   }
 
   void CompileClassVarDec() {}
@@ -117,6 +131,11 @@ class CompilationEngine {
       a="&amp;";
     }
     return a;
+  }
+
+  void compileClassVarDecList() {
+
+
   }
 
 }
