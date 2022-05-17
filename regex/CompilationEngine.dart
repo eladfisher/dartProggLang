@@ -6,6 +6,7 @@ class CompilationEngine {
   late File OUTfile;
   late File INfile;
   late Tokenizer tokenizer;
+  int numTabs = 0;
 
   CompilationEngine(File input, File output) {
     OUTfile = output;
@@ -43,19 +44,23 @@ class CompilationEngine {
 
 
   void CompileClass() {
+
     CompileKeyWord();
-    tokenizer.advance();
+    //tokenizer.advance();
 
     CompileIDENTIFIER();
-    tokenizer.advance();
+    //tokenizer.advance();
 
     CompileSymbol();
-    tokenizer.advance();
+    //tokenizer.advance();
 
     String type = tokenizer.tokenType();
 
     compileClassVarDecList();
+    compileSubroutineDecList();
 
+    CompileSymbol();
+    //tokenizer.advance();
 
     // OUTfile.writeAsStringSync("<tokens>\n",mode: FileMode.append);
     // while (tokenizer.hasMoreTokens()) {
@@ -82,15 +87,154 @@ class CompilationEngine {
     // OUTfile.writeAsStringSync("</tokens>",mode: FileMode.append);
   }
 
-  void CompileClassVarDec() {}
+  void CompileClassVarDec() {
+    numTabs++;
 
-  void CompileSubroutineDec() {}
+    String first = tokenizer.keyword();
 
-  void CompileParameterList() {}
+    CompileKeyWord();
+    //tokenizer.advance();
 
-  void CompileSubroutineBody() {}
+    if(tokenizer.tokenType()=="KEYWORD"){
+      CompileKeyWord();
+    }
 
-  void CompileVarDec() {}
+    else {
+      CompileIDENTIFIER();
+    }
+    //tokenizer.advance();
+
+    CompileIDENTIFIER();
+    //tokenizer.advance();
+
+    while(tokenizer.symbol()==","){
+      CompileSymbol();
+      //tokenizer.advance();
+
+      CompileIDENTIFIER();
+      //tokenizer.advance();
+    }
+
+    CompileSymbol();
+    //tokenizer.advance();
+
+    numTabs--;
+  }
+
+  void CompileSubroutineDec() {
+    numTabs++;
+
+    CompileKeyWord();
+    //tokenizer.advance();
+
+    //(void|type)
+    if(tokenizer.tokenType()=="KEYWORD"){
+      CompileKeyWord();
+      //tokenizer.advance();
+    }
+    else{
+
+      if(tokenizer.tokenType()=="KEYWORD"){
+        CompileKeyWord();
+      }
+
+      else {
+        CompileIDENTIFIER();
+      }
+    }
+
+    //subroutineName
+    CompileIDENTIFIER();
+
+    CompileSymbol();//(
+
+    CompileParameterList();
+
+    CompileSymbol();//)
+
+    CompileSubroutineBody();
+    numTabs--;
+  }
+
+  void CompileParameterList() {
+    numTabs++;
+
+    //check if there are params
+    if(!(tokenizer.tokenType()=="SYMBOL"&&tokenizer.symbol()==")")) {
+
+      //type
+      if(tokenizer.tokenType()=="KEYWORD"){
+        CompileKeyWord();
+      }
+
+      else {
+        CompileIDENTIFIER();
+      }
+
+      CompileIDENTIFIER();
+
+      while(tokenizer.symbol()==","){
+
+        //type
+        if(tokenizer.tokenType()=="KEYWORD"){
+          CompileKeyWord();
+        }
+
+        else {
+          CompileIDENTIFIER();
+        }
+
+        CompileIDENTIFIER();
+      }
+    }
+
+    numTabs--;
+  }
+
+  void CompileSubroutineBody() {
+
+    numTabs++;
+
+    CompileSymbol();//{
+
+    compileVarDecList();//VarDec*
+
+    CompileStatements();//Statements
+
+    CompileSymbol();//}
+
+    numTabs--;
+
+  }
+
+  void CompileVarDec() {
+
+    numTabs++;
+
+    CompileKeyWord();//"var"
+
+    //type
+    if(tokenizer.tokenType()=="KEYWORD"){
+      CompileKeyWord();
+    }
+
+    else {
+      CompileIDENTIFIER();
+    }
+
+    //varName
+    CompileIDENTIFIER();
+
+    //"," varName)*
+    while(tokenizer.symbol()==","){
+
+      CompileIDENTIFIER();
+    }
+
+    CompileSymbol();
+
+    numTabs--;
+  }
 
   void CompileStatements() {}
 
@@ -134,7 +278,23 @@ class CompilationEngine {
   }
 
   void compileClassVarDecList() {
+    while(tokenizer.keyword() == "static" || tokenizer.keyword()=="field"){
+      CompileClassVarDec();
+    }
+  }
 
+  void compileSubroutineDecList(){
+    while(tokenizer.keyword() == "int" || tokenizer.keyword()=="char"||tokenizer.keyword()=="boolean"){
+      CompileSubroutineDec();
+    }
+  }
+
+  void compileVarDecList() {
+
+    while(tokenizer.keyword()=="var")
+      {
+        CompileVarDec();
+      }
 
   }
 
