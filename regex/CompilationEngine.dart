@@ -87,9 +87,7 @@ class CompilationEngine {
     numTabs++;
     //let varName([expression])?=expression;
     CompileKeyWord(); //let
-    CompileSymbol(); //(
-    CompileExpression();
-    CompileSymbol(); //)
+    CompileIDENTIFIER();
 
     if (tokenizer.symbol() == "[") {
       CompileSymbol(); //[
@@ -143,11 +141,14 @@ class CompilationEngine {
     write(getTAB(0) + "<doStatement>\n");
     numTabs++;
     CompileKeyWord(); //do
-    write("<subroutineCall>\n");
-    numTabs++;
-    //TODO subroutineCall
-    numTabs--;
-    write("</subroutineCall>\n");
+    CompileIDENTIFIER();//subrutinenumae/class name/varname
+    if(tokenizer.symbol()=="."){
+      CompileSymbol();
+      CompileIDENTIFIER();
+    }
+    CompileSymbol();//(
+    CompileExpressionList();
+    CompileSymbol();//)
     CompileSymbol(); //;
     numTabs--;
     write(getTAB(0) + "</doStatement>\n");
@@ -355,7 +356,9 @@ class CompilationEngine {
     write("</varDec>\n");
   }
 
-  void CompileExpression() {}
+  void CompileExpression() {
+    CompileIDENTIFIER();
+  }
 
   void CompileTerm() {}
 
