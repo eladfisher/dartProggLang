@@ -45,6 +45,7 @@ class CompilationEngine {
 
   void CompileClass() {
 
+
     CompileKeyWord();
     //tokenizer.advance();
 
@@ -60,6 +61,8 @@ class CompilationEngine {
     compileSubroutineDecList();
 
     CompileSymbol();
+
+
     //tokenizer.advance();
 
     // OUTfile.writeAsStringSync("<tokens>\n",mode: FileMode.append);
@@ -88,6 +91,7 @@ class CompilationEngine {
   }
 
   void CompileClassVarDec() {
+
     numTabs++;
 
     String first = tokenizer.keyword();
@@ -119,9 +123,11 @@ class CompilationEngine {
     //tokenizer.advance();
 
     numTabs--;
+
   }
 
   void CompileSubroutineDec() {
+
     numTabs++;
 
     CompileKeyWord();
@@ -154,9 +160,11 @@ class CompilationEngine {
 
     CompileSubroutineBody();
     numTabs--;
+
   }
 
   void CompileParameterList() {
+
     numTabs++;
 
     //check if there are params
@@ -189,6 +197,7 @@ class CompilationEngine {
     }
 
     numTabs--;
+
   }
 
   void CompileSubroutineBody() {
