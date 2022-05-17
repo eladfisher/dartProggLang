@@ -14,60 +14,61 @@ class CompilationEngine {
     tokenizer = new Tokenizer(INfile);
   }
 
-  void write(String s)
-  {
-    OUTfile.writeAsStringSync(getTAB(0)+s,mode: FileMode.append);
+  void write(String s) {
+    OUTfile.writeAsStringSync(getTAB(0) + s, mode: FileMode.append);
   }
 
   void CompileKeyWord() {
-    write(getTAB(0)+"<keyword>" + tokenizer.keyword()+"</keyword>\n");
+    write(getTAB(0) + "<keyword>" + tokenizer.keyword() + "</keyword>\n");
     tokenizer.advance();
   }
 
   void CompileSymbol() {
-    var a= tokenizer.symbol();
-    a=correct(a);
-    write(getTAB(0)+"<symbol>" +a+"</symbol>\n");
+    var a = tokenizer.symbol();
+    a = correct(a);
+    write(getTAB(0) + "<symbol>" + a + "</symbol>\n");
     tokenizer.advance();
   }
 
   void CompileSTRING_CONST() {
-    write(getTAB(0)+"<stringConstant>"+ tokenizer.stringVal() +"</stringConstant>\n");
+    write(getTAB(0) +
+        "<stringConstant>" +
+        tokenizer.stringVal() +
+        "</stringConstant>\n");
     tokenizer.advance();
-
   }
 
   void CompileIDENTIFIER() {
-    write(getTAB(0)+"<identifier>"+ tokenizer.identifier() +"</identifier>\n");
+    write(getTAB(0) +
+        "<identifier>" +
+        tokenizer.identifier() +
+        "</identifier>\n");
     tokenizer.advance();
   }
 
   void CompileINT_CONST() {
-    write(getTAB(0)+"<intConstant>"+ tokenizer.intVal().toString() +"</intConstant>\n");
+    write(getTAB(0) +
+        "<intConstant>" +
+        tokenizer.intVal().toString() +
+        "</intConstant>\n");
     tokenizer.advance();
   }
 
   void CompileStatements() {
     write(getTAB(0) + "<statements>\n");
     numTabs++;
-    while (tokenizer.type == "KEYWORD") {
-      if (tokenizer.content == "let") {
+    while (tokenizer.tokenType() == "KEYWORD") {
+      if (tokenizer.keyword() == "let") {
         CompileLet();
-      }
-      else if (tokenizer.content == "do") {
+      } else if (tokenizer.keyword() == "do") {
         CompileDo();
-      }
-      else if (tokenizer.content == "if") {
+      } else if (tokenizer.keyword() == "if") {
         CompileIf();
-      }
-      else if (tokenizer.content == "while") {
+      } else if (tokenizer.keyword() == "while") {
         CompileWhile();
-      }
-      else if (tokenizer.content == "return") {
+      } else if (tokenizer.keyword() == "return") {
         CompileReturn();
-      }
-
-      else {
+      } else {
         numTabs--;
         write(getTAB(0) + "</statements>\n");
         return;
@@ -77,74 +78,69 @@ class CompilationEngine {
     }
   }
 
-
-
-  String getTAB(int i)
-  {
-    return("  "*(numTabs+i));
+  String getTAB(int i) {
+    return ("  " * (numTabs + i));
   }
 
   void CompileLet() {
-    write(getTAB(0)+"<letStatement>\n");
+    write(getTAB(0) + "<letStatement>\n");
     numTabs++;
     //let varName([expression])?=expression;
-    CompileKeyWord();//let
-    CompileSymbol();//(
+    CompileKeyWord(); //let
+    CompileSymbol(); //(
     CompileExpression();
-    CompileSymbol();//)
+    CompileSymbol(); //)
 
-    if(tokenizer.content=="[")
-    {
-      CompileSymbol();//[
+    if (tokenizer.symbol() == "[") {
+      CompileSymbol(); //[
       CompileExpression();
-      CompileSymbol();//]
+      CompileSymbol(); //]
     }
-    CompileSymbol();//=
+    CompileSymbol(); //=
     CompileExpression();
-    CompileSymbol();//;
+    CompileSymbol(); //;
     numTabs--;
-    write(getTAB(0)+"</letStatement>\n");
+    write(getTAB(0) + "</letStatement>\n");
   }
 
   void CompileIf() {
-    write(getTAB(0)+"<ifStatement>\n");
+    write(getTAB(0) + "<ifStatement>\n");
     numTabs++;
     //if (exp){stat}(else{stat})?
-    CompileKeyWord();//if
-    CompileSymbol();//(
+    CompileKeyWord(); //if
+    CompileSymbol(); //(
     CompileExpression();
-    CompileSymbol();//)
-    CompileSymbol();//{
+    CompileSymbol(); //)
+    CompileSymbol(); //{
     CompileStatements();
-    CompileSymbol();//}
-    if(tokenizer.content=="else")
-    {
-      CompileKeyWord();//else
-      CompileSymbol();//{
+    CompileSymbol(); //}
+    if (tokenizer.keyword() == "else") {
+      CompileKeyWord(); //else
+      CompileSymbol(); //{
       CompileStatements();
-      CompileSymbol();//}
+      CompileSymbol(); //}
     }
     numTabs--;
-    write(getTAB(0)+"</ifStatement>\n");
+    write(getTAB(0) + "</ifStatement>\n");
   }
 
   void CompileWhile() {
-    write(getTAB(0)+"<whileStatement>\n");
+    write(getTAB(0) + "<whileStatement>\n");
     numTabs++;
     //while (exp){stat}
-    CompileKeyWord();//while
-    CompileSymbol();//(
+    CompileKeyWord(); //while
+    CompileSymbol(); //(
     CompileExpression();
-    CompileSymbol();//)
-    CompileSymbol();//{
+    CompileSymbol(); //)
+    CompileSymbol(); //{
     CompileStatements();
-    CompileSymbol();//}
+    CompileSymbol(); //}
     numTabs--;
-    write(getTAB(0)+"</whileStatement>\n");
+    write(getTAB(0) + "</whileStatement>\n");
   }
 
   void CompileDo() {
-    write(getTAB(0)+"<doStatement>\n");
+    write(getTAB(0) + "<doStatement>\n");
     numTabs++;
     CompileKeyWord(); //do
     write("<subroutineCall>\n");
@@ -152,28 +148,26 @@ class CompilationEngine {
     //TODO subroutineCall
     numTabs--;
     write("</subroutineCall>\n");
-    CompileSymbol();//;
+    CompileSymbol(); //;
     numTabs--;
-    write(getTAB(0)+"</doStatement>\n");
+    write(getTAB(0) + "</doStatement>\n");
   }
 
   void CompileReturn() {
-    write(getTAB(0)+"<returnStatement>\n");
+    write(getTAB(0) + "<returnStatement>\n");
     numTabs++;
     CompileKeyWord(); //return
-    if (tokenizer.content!=";")
-    {
+    if (tokenizer.symbol() != ";") {
       CompileExpression();
     }
-    CompileSymbol();//;
+    CompileSymbol(); //;
     numTabs--;
-    write(getTAB(0)+"</returnStatement>\n");
+    write(getTAB(0) + "</returnStatement>\n");
   }
 
-
   void CompileClass() {
-   write("<class>\n");
-   numTabs++;
+    write("<class>\n");
+    numTabs++;
 
     CompileKeyWord();
     //tokenizer.advance();
@@ -229,11 +223,9 @@ class CompilationEngine {
     CompileKeyWord();
     //tokenizer.advance();
 
-    if(tokenizer.tokenType()=="KEYWORD"){
+    if (tokenizer.tokenType() == "KEYWORD") {
       CompileKeyWord();
-    }
-
-    else {
+    } else {
       CompileIDENTIFIER();
     }
     //tokenizer.advance();
@@ -241,7 +233,7 @@ class CompilationEngine {
     CompileIDENTIFIER();
     //tokenizer.advance();
 
-    while(tokenizer.symbol()==","){
+    while (tokenizer.symbol() == ",") {
       CompileSymbol();
       //tokenizer.advance();
 
@@ -264,17 +256,13 @@ class CompilationEngine {
     //tokenizer.advance();
 
     //(void|type)
-    if(tokenizer.tokenType()=="KEYWORD"){
+    if (tokenizer.tokenType() == "KEYWORD") {
       CompileKeyWord();
       //tokenizer.advance();
-    }
-    else{
-
-      if(tokenizer.tokenType()=="KEYWORD"){
+    } else {
+      if (tokenizer.tokenType() == "KEYWORD") {
         CompileKeyWord();
-      }
-
-      else {
+      } else {
         CompileIDENTIFIER();
       }
     }
@@ -282,11 +270,11 @@ class CompilationEngine {
     //subroutineName
     CompileIDENTIFIER();
 
-    CompileSymbol();//(
+    CompileSymbol(); //(
 
     CompileParameterList();
 
-    CompileSymbol();//)
+    CompileSymbol(); //)
 
     CompileSubroutineBody();
     numTabs--;
@@ -298,27 +286,21 @@ class CompilationEngine {
     numTabs++;
 
     //check if there are params
-    if(!(tokenizer.tokenType()=="SYMBOL"&&tokenizer.symbol()==")")) {
-
+    if (!(tokenizer.tokenType() == "SYMBOL" && tokenizer.symbol() == ")")) {
       //type
-      if(tokenizer.tokenType()=="KEYWORD"){
+      if (tokenizer.tokenType() == "KEYWORD") {
         CompileKeyWord();
-      }
-
-      else {
+      } else {
         CompileIDENTIFIER();
       }
 
       CompileIDENTIFIER();
 
-      while(tokenizer.symbol()==","){
-
+      while (tokenizer.symbol() == ",") {
         //type
-        if(tokenizer.tokenType()=="KEYWORD"){
+        if (tokenizer.tokenType() == "KEYWORD") {
           CompileKeyWord();
-        }
-
-        else {
+        } else {
           CompileIDENTIFIER();
         }
 
@@ -334,13 +316,13 @@ class CompilationEngine {
     write("<subroutineBody>\n");
     numTabs++;
 
-    CompileSymbol();//{
+    CompileSymbol(); //{
 
-    compileVarDecList();//VarDec*
+    compileVarDecList(); //VarDec*
 
-    CompileStatements();//Statements
+    CompileStatements(); //Statements
 
-    CompileSymbol();//}
+    CompileSymbol(); //}
 
     numTabs--;
     write("</subroutineBody>\n");
@@ -350,14 +332,12 @@ class CompilationEngine {
     write("<varDec>\n");
     numTabs++;
 
-    CompileKeyWord();//"var"
+    CompileKeyWord(); //"var"
 
     //type
-    if(tokenizer.tokenType()=="KEYWORD"){
+    if (tokenizer.tokenType() == "KEYWORD") {
       CompileKeyWord();
-    }
-
-    else {
+    } else {
       CompileIDENTIFIER();
     }
 
@@ -365,8 +345,7 @@ class CompilationEngine {
     CompileIDENTIFIER();
 
     //"," varName)*
-    while(tokenizer.symbol()==","){
-
+    while (tokenizer.symbol() == ",") {
       CompileIDENTIFIER();
     }
 
@@ -382,46 +361,36 @@ class CompilationEngine {
 
   void CompileExpressionList() {}
 
-  String correct(String a)
-  {
-    if (a=="<")
-    {
-      a="&lt;";
-    }
-    else if (a==">")
-    {
-      a="&gt;";
-    }
-    else if (a=="\"")
-    {
-      a="&quet;";
-    }
-    else if (a=="\$")
-    {
-      a="&amp;";
+  String correct(String a) {
+    if (a == "<") {
+      a = "&lt;";
+    } else if (a == ">") {
+      a = "&gt;";
+    } else if (a == "\"") {
+      a = "&quet;";
+    } else if (a == "\$") {
+      a = "&amp;";
     }
     return a;
   }
 
   void compileClassVarDecList() {
-    while(tokenizer.keyword() == "static" || tokenizer.keyword()=="field"){
+    while (tokenizer.keyword() == "static" || tokenizer.keyword() == "field") {
       CompileClassVarDec();
     }
   }
 
-  void compileSubroutineDecList(){
-    while(tokenizer.keyword() == "constructor" || tokenizer.keyword()=="function"||tokenizer.keyword()=="method"){
+  void compileSubroutineDecList() {
+    while (tokenizer.keyword() == "constructor" ||
+        tokenizer.keyword() == "function" ||
+        tokenizer.keyword() == "method") {
       CompileSubroutineDec();
     }
   }
 
   void compileVarDecList() {
-
-    while(tokenizer.keyword()=="var")
-      {
-        CompileVarDec();
-      }
-
+    while (tokenizer.keyword() == "var") {
+      CompileVarDec();
+    }
   }
-
 }
