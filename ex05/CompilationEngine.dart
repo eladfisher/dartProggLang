@@ -1,21 +1,26 @@
 import 'dart:io';
 
+import 'SymbolTable.dart';
 import 'Tokenizer.dart';
+import 'VMWriter.dart';
 
 class CompilationEngine {
   late File OUTfile;
   late File INfile;
   late Tokenizer tokenizer;
   int numTabs = 0;
+  late SymbolTable symbolTable = new SymbolTable();
+  late VMWriter vmWriter;
 
   CompilationEngine(File input, File output) {
     OUTfile = output;
     INfile = input;
     tokenizer = new Tokenizer(INfile);
+    vmWriter = new VMWriter(output);
   }
 
   void write(String s) {
-    OUTfile.writeAsStringSync(getTAB(0) + s, mode: FileMode.append);
+    //OUTfile.writeAsStringSync(getTAB(0) + s, mode: FileMode.append);
   }
 
   void CompileKeyWord() {
@@ -170,8 +175,8 @@ class CompilationEngine {
   }
 
   void CompileClass() {
-    write("<class>\n");
-    numTabs++;
+
+
 
     CompileKeyWord();
     //tokenizer.advance();
@@ -219,21 +224,24 @@ class CompilationEngine {
   }
 
   void CompileClassVarDec() {
-    write("<classVarDec>\n");
-    numTabs++;
+    //write("<classVarDec>\n");
+    //numTabs++;
 
-    String first = tokenizer.keyword();
+    String kind = tokenizer.keyword();
 
-    CompileKeyWord();
+    CompileKeyWord();//static|field
     //tokenizer.advance();
 
     if (tokenizer.tokenType() == "KEYWORD") {
-      CompileKeyWord();
+      String type = tokenizer.keyword();
+      CompileKeyWord();//type
     } else {
-      CompileIDENTIFIER();
+      String type = tokenizer.identifier();
+      CompileIDENTIFIER();//type
     }
     //tokenizer.advance();
 
+    symbolTable.define()
     CompileIDENTIFIER();
     //tokenizer.advance();
 
