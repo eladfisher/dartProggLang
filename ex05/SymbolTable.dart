@@ -19,7 +19,12 @@ class SymbolTable{
     return 0;
   }
 
-  String kindOf(String)
+  String kindOf(String){
+
+    return "";
+  }
+
+
 
 
 }
