@@ -49,6 +49,9 @@ class VMWriter
       case"=":
         write("eq");
         break;
+      case"~":
+        write("not");
+        break;
     }
   }
 
@@ -78,6 +81,7 @@ class VMWriter
   {
     write("return");
   }
+
 
   void write(String s)
   {
