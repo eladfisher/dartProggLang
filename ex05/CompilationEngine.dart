@@ -7,20 +7,21 @@ import 'VMWriter.dart';
 class CompilationEngine {
   late File OUTfile;
   late File INfile;
+  late int runNumber = 0 ;
   late Tokenizer tokenizer;
   int numTabs = 0;
   late SymbolTable symbolTable = new SymbolTable();
   late VMWriter vmWriter;
 
-  CompilationEngine(File input, File output) {
-    OUTfile = output;
+  CompilationEngine(File input, File output,File xmloutput) {
+    OUTfile = xmloutput;
     INfile = input;
     tokenizer = new Tokenizer(INfile);
     vmWriter = new VMWriter(output);
   }
 
   void write(String s) {
-    //OUTfile.writeAsStringSync(getTAB(0) + s, mode: FileMode.append);
+    OUTfile.writeAsStringSync(getTAB(0) + s, mode: FileMode.append);
   }
 
   void CompileKeyWord() {
@@ -241,7 +242,7 @@ class CompilationEngine {
     }
     //tokenizer.advance();
 
-    symbolTable.define()
+//    symbolTable.define();
     CompileIDENTIFIER();
     //tokenizer.advance();
 
