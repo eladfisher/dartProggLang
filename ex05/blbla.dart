@@ -189,7 +189,7 @@ class CompilationEngine1 {
 
     vmWriter.writeCall(name1, num);
     //TODO: fisher is dba!
-    vmWriter.writePop("arg", 5);
+    vmWriter.writePop("TEMP", 0);
 
     numTabs--;
     write("</doStatement>\n");

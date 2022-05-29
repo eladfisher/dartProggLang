@@ -11,11 +11,52 @@ class VMWriter
 
   void writePush(String segment,int index)
   {
+    switch(segment){
+      case "var":
+        segment = "local";
+        break;
+      case "ARG":
+        segment = "argument";
+        break;
+      case "constant":
+        break;
+      case "field":
+        segment = "this";
+        break;
+      case "":
+        break;
+      default:
+        print("ERROR PUSH DOESNT FIT kind: $segment");
+    }
+
+
+
     write("push $segment $index");
   }
 
   void writePop(String segment,int index)
   {
+    switch(segment){
+      case "var":
+        segment = "local";
+        break;
+      case "ARG":
+        segment = "argument";
+        break;
+      case "constant":
+        break;
+      case "temp":
+        break;
+      case "field":
+        segment = "this";
+        break;
+      case "POINTER":
+        segment = "this";
+        break;
+      default:
+        print("ERROR POP DOESNT FIT kind: $segment");
+    }
+
     write("pop $segment $index");
   }
 
@@ -49,9 +90,8 @@ class VMWriter
       case"=":
         write("eq");
         break;
-      case"~":
-        write("not");
-        break;
+      default:
+        print("no operation found $command");
     }
   }
 
@@ -70,7 +110,7 @@ class VMWriter
   }
   writeCall(String name, int nArgs)
   {
-    write("if-goto $name $nArgs");
+    write("call $name $nArgs");
   }
 
   writeFunction(String name, int nLoacls)
@@ -81,6 +121,38 @@ class VMWriter
   {
     write("return");
   }
+  writeTerm(String s){
+    switch(s){
+      case"~":
+        write("not");
+        break;
+      case"-":
+        write("neg");
+        break;
+      case "true":
+        write("push constant 0");
+        write("not");
+        break;
+      case "false":
+      case "null":
+        write("push constant 0");
+        break;
+
+      default:
+        int len = s.length;
+        write("push constant  $len");
+        write("call String.new");
+
+        for(int i=0 ; i<len ; ++i)  {
+          int temp = s.codeUnitAt(i);
+          write("push constant $temp");
+          write("call String.appendChar 2");
+        }
+
+
+    }
+  }
+
 
 
   void write(String s)
