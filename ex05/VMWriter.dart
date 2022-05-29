@@ -23,7 +23,7 @@ class VMWriter
       case "field":
         segment = "this";
         break;
-      case "":
+      case "pointer":
         break;
       default:
         print("ERROR PUSH DOESNT FIT kind: $segment");
@@ -51,7 +51,7 @@ class VMWriter
         segment = "this";
         break;
       case "POINTER":
-        segment = "this";
+        segment = "pointer";
         break;
       default:
         print("ERROR POP DOESNT FIT kind: $segment");
@@ -137,8 +137,15 @@ class VMWriter
       case "null":
         write("push constant 0");
         break;
+      case "this":
+        writePush("pointer",0);
+
+        break;
 
       default:
+
+        print(s);
+
         int len = s.length;
         write("push constant  $len");
         write("call String.new");

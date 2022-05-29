@@ -45,6 +45,13 @@ class SymbolTable{
 
   }
 
+  bool exist(String name){
+    if(subRoutineVars.containsKey(name)||classVars.containsKey(name))
+      return true;
+    else
+      return false;
+  }
+
   int varCount(String kind){
 
     switch (kind){

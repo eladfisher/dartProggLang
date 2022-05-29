@@ -194,19 +194,40 @@ class CompilationEngine {
 
     write("<doStatement>\n");
     numTabs++;
+    bool isMethod = false;
+
     CompileKeyWord(); //do
     String name1 = tokenizer.identifier();
+    String varName = tokenizer.identifier();
     CompileIDENTIFIER();//subrutinenumae/class name/varname
+
     if(tokenizer.symbol()=="."){
+      isMethod = symbolTable.exist(name1);
       name1+=".";
       CompileSymbol();
       name1 += tokenizer.identifier();
       CompileIDENTIFIER();
+
+      if(isMethod) {//if is method we push the caller object
+        vmWriter.writePush(
+            symbolTable.kindOf(varName), symbolTable.indexOf(varName));
+      }
+
+    }
+    else if (tokenizer.symbol()=="("){
+      vmWriter.writePush("pointer" , 0);//here the thing we send the caller object
+      isMethod = true;
+
+      name1 = className+ "." +name1;
     }
     CompileSymbol();//(
     var num = CompileExpressionList();
     CompileSymbol();//)
     CompileSymbol(); //;
+
+    if(isMethod){//add the pushed object in case of method
+      num++;
+    }
 
     vmWriter.writeCall(name1, num);
     //TODO: fisher is dba!
@@ -462,12 +483,12 @@ class CompilationEngine {
 
         int reqSize = symbolTable.varCount("ARG");
         vmWriter.write("""
-push constant  $reqSize
+push constant $reqSize
 call Memory.alloc 1
 pop pointer 0""");
         constructor = true;
       }
-    else if (subroutineType=="method"){
+    else if (subroutineType == "method"){
       vmWriter.writePush("ARG", 0);
       vmWriter.writePop('POINTER', 0);
     }
