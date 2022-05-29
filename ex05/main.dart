@@ -5,7 +5,7 @@ import 'CompilationEngine.dart';
 //C:\nand2tetris\projects\10\ArrayTest
 //C:\nand2tetris\projects\10\ArrayTest
 main(List<String> arguments) async {
-  var FileInputPath =  "C:\\nand2tetris\\projects\\11\\Square";
+  var FileInputPath =  "C:\\nand2tetris\\projects\\11\\Pong";
 
   // Get the system temp directory .
   var systemTempDir = Directory.systemTemp;
@@ -34,8 +34,8 @@ main(List<String> arguments) async {
     //print("file name = $outputFileName");
 
 
-    var output = new File(FileInputPath + outputFileName+"US.vm");
-    var output2 = new File(FileInputPath + outputFileName+"US.xml");
+    var output = new File(FileInputPath + outputFileName+".vm");
+    var output2 = new File(FileInputPath + outputFileName+".xml");
     output.writeAsStringSync("");
     print(output.path);
     var input = new File(file.path);

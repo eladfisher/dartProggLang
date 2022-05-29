@@ -88,6 +88,14 @@ class SymbolTable{
     return classVars[name][3];
   }
 
+  String typeOf(String name){
+    if(subRoutineVars.containsKey(name)){
+      return subRoutineVars[name][1];
+    }
+
+    return classVars[name][1];
+  }
+
 
 
 

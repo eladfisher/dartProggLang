@@ -148,7 +148,7 @@ class VMWriter
 
         int len = s.length;
         write("push constant  $len");
-        write("call String.new");
+        write("call String.new 1");
 
         for(int i=0 ; i<len ; ++i)  {
           int temp = s.codeUnitAt(i);

@@ -203,14 +203,15 @@ class CompilationEngine {
 
     if(tokenizer.symbol()=="."){
       isMethod = symbolTable.exist(name1);
-      name1+=".";
+      name1 += ".";
       CompileSymbol();
+      String methodName = tokenizer.identifier();
       name1 += tokenizer.identifier();
       CompileIDENTIFIER();
 
-      if(isMethod) {//if is method we push the caller object
-        vmWriter.writePush(
-            symbolTable.kindOf(varName), symbolTable.indexOf(varName));
+      if(isMethod) {//if is method we push the caller object( the call is [object.method()])
+        vmWriter.writePush(symbolTable.kindOf(varName), symbolTable.indexOf(varName));
+        name1 = symbolTable.typeOf(varName)+ "." + methodName;
       }
 
     }
@@ -481,7 +482,7 @@ class CompilationEngine {
 
     if(subroutineName=="new"){
 
-        int reqSize = symbolTable.varCount("ARG");
+        int reqSize = symbolTable.varCount("FIELD");
         vmWriter.write("""
 push constant $reqSize
 call Memory.alloc 1
@@ -609,7 +610,10 @@ pop pointer 0""");
         break;
       case "IDENTIFIER"://varName|varName[Expression]|subroutineCall
         name1 = tokenizer.identifier();
+        String varName = name1;
         CompileIDENTIFIER();
+
+        bool isMethod= false;
 
         //TODO array compile
         if(tokenizer.symbol()=="["){//varName[Expression]
@@ -618,15 +622,34 @@ pop pointer 0""");
           CompileSymbol();//]
         }
 
-        else if(tokenizer.symbol()=="("||tokenizer.symbol()=="."){//subroutine call{
-          if(tokenizer.symbol()=="."){
+        else if(tokenizer.symbol()=="("||tokenizer.symbol()=="."){
+          if(tokenizer.symbol()=="."){//subroutine call{
             CompileSymbol();
+
+            isMethod = symbolTable.exist(name1);
+
+            String methodName = tokenizer.identifier();
             name1 += "." + tokenizer.identifier();
             CompileIDENTIFIER();
+
+            if(isMethod) {//if is method we push the caller object( the call is [object.method()])
+              vmWriter.writePush(symbolTable.kindOf(varName), symbolTable.indexOf(varName));
+              name1 = symbolTable.typeOf(varName)+ "." + methodName;
+            }
+            else{
+              vmWriter.writePush("pointer" , 0);//here the thing we send the caller object
+              isMethod = true;
+
+              name1 = className+ "." +name1;
+            }
           }
           CompileSymbol();//(
           int numArg = CompileExpressionList();
           CompileSymbol();//)
+
+          if(isMethod){//add the pushed object in case of method
+            numArg++;
+          }
 
           //call the function
           vmWriter.writeCall(name1, numArg);
