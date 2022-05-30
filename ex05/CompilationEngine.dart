@@ -622,8 +622,8 @@ pop pointer 0""");
           CompileSymbol();//]
         }
 
-        else if(tokenizer.symbol()=="("||tokenizer.symbol()=="."){
-          if(tokenizer.symbol()=="."){//subroutine call{
+        else if(tokenizer.symbol()=="("||tokenizer.symbol()==".") {
+          if (tokenizer.symbol() == ".") { //subroutine call{
             CompileSymbol();
 
             isMethod = symbolTable.exist(name1);
@@ -632,27 +632,31 @@ pop pointer 0""");
             name1 += "." + tokenizer.identifier();
             CompileIDENTIFIER();
 
-            if(isMethod) {//if is method we push the caller object( the call is [object.method()])
-              vmWriter.writePush(symbolTable.kindOf(varName), symbolTable.indexOf(varName));
-              name1 = symbolTable.typeOf(varName)+ "." + methodName;
-            }
-            else{
-              vmWriter.writePush("pointer" , 0);//here the thing we send the caller object
-              isMethod = true;
-
-              name1 = className+ "." +name1;
+            if (isMethod) { //if is method we push the caller object( the call is [object.method()])
+              vmWriter.writePush(
+                  symbolTable.kindOf(varName), symbolTable.indexOf(varName));
+              name1 = symbolTable.typeOf(varName) + "." + methodName;
             }
           }
-          CompileSymbol();//(
-          int numArg = CompileExpressionList();
-          CompileSymbol();//)
+          else if (tokenizer.symbol() == "(") {
+            vmWriter.writePush(
+                "pointer", 0); //here the thing we send the caller object
+            isMethod = true;
 
-          if(isMethod){//add the pushed object in case of method
+            name1 = className + "." + name1;
+          }
+
+          CompileSymbol(); //(
+          int numArg = CompileExpressionList();
+          CompileSymbol(); //)
+
+          if (isMethod) { //add the pushed object in case of method
             numArg++;
           }
 
           //call the function
           vmWriter.writeCall(name1, numArg);
+
         }
         else{//varName
           vmWriter.writePush(symbolTable.kindOf(name1), symbolTable.indexOf(name1));

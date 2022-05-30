@@ -26,7 +26,7 @@ class Tokenizer {
     index = 0;
     content = content.trim();
 
-    if(content[index].contains(new RegExp(r"[A-Za-z]"))){
+    if(content[index].contains(new RegExp(r"[A-Za-z_]"))){
       readId();
     }
 
